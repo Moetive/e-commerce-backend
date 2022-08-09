@@ -51,10 +51,44 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", (req, res) => {
   // update a tag's name by its `id` value
-  
-});
+  Tag.update(req.body,
+    {
+      where: {
+        id: req.params.id,
+      },
+    })
+    .then((tag) => {
+      // get list of current tag_ids
+      return ProductTag.findAll({ where: { product_id: req.params.id } });
+    })
+      .then(productTags) => {
+        // figure out which ones to remove
+      const productTagsToRemove = productTags
+        .filter(({ tag_id }) => !productTagIds.includes(product_id))
+        .map(({ product_id }) => {
+          return {
+            tag_id: req.params.id,
+            product_id,
+          };
+          
+        });
+      
+        const ptagsremove = productTags
+        .filter(({ product_id }) => !req.body.productIds.includes(product_id))
+        .map(({ id }) => id);
 
-router.delete("/:id", (req, res) => {
+      // run both actions
+      return Promise.all([
+        ProductTag.destroy({ where: { id: productTagsToRemove } }),
+        ProductTag.bulkCreate(newProductTags),
+      ]);
+    .then((updatedProductTags) => res.json(updatedProductTags))
+    .catch((err) => {
+      // console.log(err);
+      res.status(400).json(err);
+    });
+  }_
+router.delete("/:id", async (req, res) => {
   // delete on tag by its `id` value
   try {
     const db_tagData = await Tag.destroy({
