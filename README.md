@@ -30,6 +30,7 @@ THEN I am able to successfully create, update, and delete data in my database
 ## Mock-Up
 
 The following link is a walkthrough video on this E-Commerce Back End
+https://drive.google.com/file/d/1qM48WLfkEdVT4iPkEySKKxH0-HYwXzWB/view?usp=sharing 
 
 
 ## Author
